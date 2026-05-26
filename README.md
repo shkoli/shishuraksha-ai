@@ -538,17 +538,16 @@ npm run dev
 
 ## 🔬 Research Context
 
-**Institution:** Department of Computer Science & Engineering, RTM Al-Kabir Technical University, Sylhet, Bangladesh
-
-**Developer:** Salma Hoque Talukdar Koli
+**Developer:** Salma Hoque Talukdar Koli  
+**Institution:** Department of Computer Science & Engineering, RTM Al-Kabir Technical University, Sylhet, Bangladesh  
+**Project Type:** Student Research Project (Personal Initiative)
 
 ## 🛡️ Ethics & Responsible AI
 
-**Ethics Status:** Research prototype phase only.
+**Ethics Status:** Research prototype only  
+**Ethics Reference:** Application will be submitted to BSMMU-ERC (Pending)
 
-We will seek formal ethics approval from **BSMMU-ERC** before any human subject testing, data collection, or clinical deployment. 
-
-Application to BSMMU Institutional Review Board (IRB) will be submitted when moving beyond prototype stage.
+> ⚠️ **Important Note**: This project is in the early research and prototype stage. Any future use involving real children, psychological screening, or clinical deployment requires full ethics approval from BSMMU-ERC (or equivalent IRB) and informed consent from guardians.
 
 **Version:** 0.2.0 · Research prototype
 
