@@ -1,0 +1,74 @@
+{
+  "models": [
+    {
+      "model": "SDQ only (baseline)",
+      "accuracy": 0.762,
+      "sensitivity": 0.431,
+      "specificity": 0.862,
+      "precision": 0.485,
+      "f1": 0.457,
+      "auc_roc": 0.756,
+      "auc_ci_95": [
+        0.705,
+        0.803
+      ]
+    },
+    {
+      "model": "Text only",
+      "accuracy": 0.784,
+      "sensitivity": 0.388,
+      "specificity": 0.904,
+      "precision": 0.549,
+      "f1": 0.455,
+      "auc_roc": 0.768,
+      "auc_ci_95": [
+        0.716,
+        0.815
+      ]
+    },
+    {
+      "model": "Drawing only",
+      "accuracy": 0.824,
+      "sensitivity": 0.371,
+      "specificity": 0.961,
+      "precision": 0.741,
+      "f1": 0.494,
+      "auc_roc": 0.774,
+      "auc_ci_95": [
+        0.718,
+        0.827
+      ]
+    },
+    {
+      "model": "ShishuRaksha AI",
+      "accuracy": 0.854,
+      "sensitivity": 0.603,
+      "specificity": 0.93,
+      "precision": 0.722,
+      "f1": 0.657,
+      "auc_roc": 0.874,
+      "auc_ci_95": [
+        0.834,
+        0.908
+      ]
+    }
+  ],
+  "ablation": [
+    {
+      "configuration": "Without questionnaire",
+      "auc_roc": 0.822
+    },
+    {
+      "configuration": "Without text",
+      "auc_roc": 0.774
+    },
+    {
+      "configuration": "Without drawing",
+      "auc_roc": 0.844
+    },
+    {
+      "configuration": "All modalities (full)",
+      "auc_roc": 0.874
+    }
+  ]
+}

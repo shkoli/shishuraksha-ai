@@ -1,0 +1,5 @@
+Model,Accuracy,Sensitivity,Specificity,Precision,F1,AUC-ROC,AUC 95% CI
+SDQ only (baseline),0.762,0.431,0.862,0.485,0.457,0.756,"[0.705, 0.803]"
+Text only,0.784,0.388,0.904,0.549,0.455,0.768,"[0.716, 0.815]"
+Drawing only,0.824,0.371,0.961,0.741,0.494,0.774,"[0.718, 0.827]"
+ShishuRaksha AI,0.854,0.603,0.93,0.722,0.657,0.874,"[0.834, 0.908]"

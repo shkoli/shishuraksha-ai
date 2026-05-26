@@ -1,0 +1,481 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XAI-MPSCAP-BD  —  Full System Configuration
+# Explainable AI for Multi-modal Psychiatric Screening of Children &
+# Adolescents — Bangladesh
+# ═══════════════════════════════════════════════════════════════════════════════
+
+project:
+  name: xai-mpscap-bd
+  version: "0.2.0"
+  description: >
+    Explainable AI system for multi-modal psychiatric screening of children
+    and adolescents (ages 5–17) in Bangladesh, targeting early identification
+    of abuse-related trauma, depression, anxiety, and PTSD.
+  institution: "Department of Computer Science & Engineering"
+  country: "BD"
+  ethics_approval_ref: "BSMMU-ERC-2024-XXX"
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Bangladesh-specific settings
+# ───────────────────────────────────────────────────────────────────────────────
+bangladesh:
+  language:
+    primary: "bn"                       # Bengali (ISO 639-1)
+    secondary: "en"
+    bnlp_model: "sagorsarker/bangla-bert-base"
+    script: "Bengali"                   # Unicode block: U+0980–U+09FF
+
+  administrative_divisions:
+    - Dhaka
+    - Chittagong
+    - Rajshahi
+    - Khulna
+    - Barisal
+    - Sylhet
+    - Rangpur
+    - Mymensingh
+
+  referral_endpoints:
+    # One-Stop Crisis Centre (OCC) — DGHS, under Ministry of Health
+    occ:
+      name: "One-Stop Crisis Centre"
+      name_bn: "ওয়ান-স্টপ ক্রাইসিস সেন্টার"
+      hotline: "16767"
+      base_url: "https://occ.dghs.gov.bd"
+      api_endpoint: "https://occ.dghs.gov.bd/api/referrals"
+      timeout_seconds: 10
+      enabled: true
+
+    # Department of Social Services — child protection
+    dss:
+      name: "Department of Social Services"
+      name_bn: "সমাজসেবা অধিদপ্তর"
+      hotline: "1098"                   # National Child Helpline
+      base_url: "https://dss.gov.bd"
+      api_endpoint: "https://dss.gov.bd/api/v1/child-referrals"
+      timeout_seconds: 10
+      enabled: true
+
+    # National Mental Health Helpline
+    nmhh:
+      name: "National Mental Health Helpline"
+      name_bn: "জাতীয় মানসিক স্বাস্থ্য হেল্পলাইন"
+      hotline: "16789"
+      enabled: true
+
+    # Kaan Pete Roi — emotional support
+    kaan_pete_roi:
+      name: "Kaan Pete Roi"
+      hotline: "+8801779-554391"
+      enabled: true
+
+  child_protection_law:
+    act: "Children Act 2013"
+    mandatory_reporting: true
+    reporting_authority: "Bangladesh Police & DSS"
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Data paths
+# ───────────────────────────────────────────────────────────────────────────────
+data:
+  raw_dir:        "data/raw"
+  processed_dir:  "data/processed"
+  synthetic_dir:  "data/synthetic"
+  cache_dir:      "data/.cache"
+  n_synthetic:    500
+  abuse_prevalence: 0.20               # 20% abuse, 80% non-abuse
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Model checkpoints
+# ───────────────────────────────────────────────────────────────────────────────
+model_paths:
+  text_model:          "checkpoints/text/best_model.pt"
+  drawing_model:       "checkpoints/drawing/best_model.pt"
+  questionnaire_model: "checkpoints/questionnaire/best_model.pt"
+  fusion_model:        "checkpoints/fusion/best_model.pt"
+  trauma_detector:     "checkpoints/trauma_detector/best_model.pt"
+  tokenizer_dir:       "checkpoints/tokenizer"
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Modality weights  (must sum to 1.0)
+# ───────────────────────────────────────────────────────────────────────────────
+modality_weights:
+  questionnaire: 0.40   # Highest — structured validated instruments
+  text:          0.25   # Bengali narrative — strong trauma signal
+  drawing:       0.20   # HTP markers — non-verbal disclosure
+  facial:        0.15   # Emotion during interview — weakest signal in low-res settings
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Risk stratification  (4 levels)
+# ───────────────────────────────────────────────────────────────────────────────
+risk_stratification:
+  levels:
+    - id: 0
+      name: "low"
+      name_bn: "নিম্ন ঝুঁকি"
+      color: "#2ecc71"
+      score_range: [0.00, 0.25)
+      actions:
+        - "routine_monitoring"
+        - "psychoeducation_for_parents"
+        - "followup_in_3_months"
+      referral: null
+      urgency: false
+
+    - id: 1
+      name: "moderate"
+      name_bn: "মাঝারি ঝুঁকি"
+      color: "#f39c12"
+      score_range: [0.25, 0.50)
+      actions:
+        - "counselling_referral"
+        - "parent_consultation"
+        - "school_liaison"
+        - "followup_in_6_weeks"
+      referral: "district_mental_health_unit"
+      urgency: false
+
+    - id: 2
+      name: "high"
+      name_bn: "উচ্চ ঝুঁকি"
+      color: "#e67e22"
+      score_range: [0.50, 0.75)
+      actions:
+        - "urgent_psychiatric_referral"
+        - "safety_planning"
+        - "guardian_notification"
+        - "followup_in_1_week"
+      referral: "occ"
+      urgency: false
+
+    - id: 3
+      name: "critical"
+      name_bn: "জরুরি ঝুঁকি"
+      color: "#e74c3c"
+      score_range: [0.75, 1.00]
+      actions:
+        - "immediate_psychiatric_evaluation"
+        - "activate_child_protection_protocol"
+        - "notify_dss_and_police"
+        - "safe_placement_assessment"
+        - "same_day_followup"
+      referral: "dss"
+      urgency: true
+
+  # Thresholds as flat list for quick lookup
+  thresholds:
+    low_to_moderate: 0.25
+    moderate_to_high: 0.50
+    high_to_critical: 0.75
+
+  # Absolute override: force critical regardless of composite score
+  critical_override_flags:
+    - "sdq_suicidality_item_endorsed"
+    - "cpss_active_self_harm"
+    - "narrative_suicidal_ideation"
+    - "drawing_self_harm_imagery"
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Questionnaire instruments
+# ───────────────────────────────────────────────────────────────────────────────
+questionnaire:
+  instruments:
+    SDQ:
+      full_name: "Strengths and Difficulties Questionnaire"
+      items: 25
+      subscales: [emotional, conduct, hyperactivity, peer, prosocial]
+      subscale_items: 5
+      item_scale: [0, 1, 2]
+      total_difficulties_max: 40
+      # Bangladeshi normative cutoffs (Goodman 2001; adapted)
+      cutoffs:
+        normal:      [0, 13]
+        borderline:  [14, 16]
+        abnormal:    [17, 40]
+      language_versions: ["bn", "en"]
+
+    CPSS:
+      full_name: "Child PTSD Symptom Scale (DSM-5 adapted)"
+      items: 20
+      subscales: [intrusion, avoidance, negative_cognitions, arousal]
+      item_scale: [0, 1, 2, 3]
+      total_max: 60
+      cutoffs:
+        subclinical:  [0, 10]
+        moderate:     [11, 24]
+        severe:       [25, 60]
+      language_versions: ["bn", "en"]
+
+  missing_item_threshold: 0.20        # Invalidate if >20% items missing
+  prorated_imputation: true
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Text analysis
+# ───────────────────────────────────────────────────────────────────────────────
+text_analysis:
+  encoder: "sagorsarker/bangla-bert-base"
+  max_length: 512
+  batch_size: 32
+  pooling: "cls"                       # CLS token embedding
+  trauma_detector:
+    threshold: 0.65
+    categories:
+      - physical_abuse
+      - sexual_abuse
+      - emotional_abuse
+      - neglect
+      - domestic_violence
+      - bereavement
+      - disaster_exposure
+  psycholinguistic_features:
+    - lexical_diversity
+    - avg_sentence_length
+    - neg_affect_ratio
+    - first_person_ratio
+    - temporal_coherence
+    - trauma_keyword_count
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Drawing analysis (House-Tree-Person)
+# ───────────────────────────────────────────────────────────────────────────────
+drawing_analysis:
+  backbone: "efficientnet_b3"
+  image_size: [224, 224]
+  batch_size: 16
+  pretrained: true
+  dropout: 0.3
+  trauma_marker_threshold: 0.60
+  htp_markers:                         # 20 binary features used in synthetic data
+    - omit_house
+    - omit_tree
+    - omit_person
+    - dark_shading
+    - heavy_line_pressure
+    - tiny_figure
+    - figure_off_center
+    - facial_features_omitted
+    - hands_omitted
+    - feet_omitted
+    - ground_line_absent
+    - sun_absent
+    - clouds_present
+    - encapsulation
+    - compartmentalization
+    - barriers
+    - aggressive_imagery
+    - regressive_content
+    - figure_eyes_closed
+    - figure_mouth_omitted
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Facial analysis
+# ───────────────────────────────────────────────────────────────────────────────
+facial_analysis:
+  detector_backend: "retinaface"
+  emotion_labels: [angry, disgust, fear, happy, sad, surprise, neutral]
+  fps_sample_rate: 5
+  min_face_confidence: 0.90
+  flat_affect_au_threshold: 0.30
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Fusion model
+# ───────────────────────────────────────────────────────────────────────────────
+fusion:
+  strategy: "cross_modal_attention"
+  hidden_dim: 256
+  num_heads: 8
+  dropout: 0.3
+  modality_dropout_p: 0.10            # Randomly zero a modality during training
+  modality_input_dims:
+    questionnaire: 64
+    text: 768
+    drawing: 1536
+    facial: 128
+  num_classes: 4                      # low / moderate / high / critical
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Training
+# ───────────────────────────────────────────────────────────────────────────────
+training:
+  seed: 42
+  device: "cuda"                      # fallback to "cpu" automatically if unavailable
+  val_split: 0.15
+  test_split: 0.15
+  class_weights: "balanced"           # handle 80/20 imbalance
+
+  text:
+    epochs: 50
+    batch_size: 32
+    lr: 1.0e-5                        # fine-tune BanglaBERT with low LR
+    weight_decay: 1.0e-5
+    warmup_steps: 200
+    early_stopping_patience: 8
+    scheduler: "cosine"
+
+  drawing:
+    epochs: 60
+    batch_size: 16
+    lr: 1.0e-4
+    weight_decay: 1.0e-5
+    early_stopping_patience: 10
+    scheduler: "cosine"
+    amp: true                         # mixed precision
+
+  questionnaire:
+    epochs: 150
+    batch_size: 64
+    lr: 5.0e-4
+    weight_decay: 1.0e-5
+    early_stopping_patience: 20
+    scheduler: "reduce_on_plateau"
+
+  fusion:
+    epochs: 50
+    batch_size: 32
+    lr: 1.0e-4
+    weight_decay: 1.0e-5
+    early_stopping_patience: 10
+    scheduler: "cosine"
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Evaluation
+# ───────────────────────────────────────────────────────────────────────────────
+evaluation:
+  primary_metric: "auroc"
+  metrics:
+    - auroc
+    - average_precision
+    - f1_macro
+    - f1_weighted
+    - sensitivity
+    - specificity
+    - ppv
+    - npv
+    - accuracy
+  bootstrap_ci_n: 1000
+  bootstrap_ci_alpha: 0.95
+  clinical_decision_threshold: 0.50
+  bias_attributes:
+    - age_group                       # child (5-11) vs adolescent (12-17)
+    - gender
+    - division
+    - ses                             # socioeconomic status
+
+# ───────────────────────────────────────────────────────────────────────────────
+# XAI
+# ───────────────────────────────────────────────────────────────────────────────
+xai:
+  shap:
+    background_samples: 100
+    max_display_features: 15
+    plot_types: [waterfall, beeswarm, force]
+  lime:
+    num_features: 10
+    num_samples: 500
+    kernel_width: 0.25
+  gradcam:
+    target_layer: "features.8"        # EfficientNet-B3 last conv block
+    colormap: "jet"
+    alpha: 0.5
+  attention:
+    plot_type: "bar"                  # modality weight bar chart
+    token_highlight: true
+  report:
+    format: ["pdf", "json"]
+    language: "bn"                    # default report language
+    template_dir: "templates/reports"
+    output_dir: "outputs/reports"
+    include_raw_scores: true
+    include_visualizations: true
+
+# ───────────────────────────────────────────────────────────────────────────────
+# API
+# ───────────────────────────────────────────────────────────────────────────────
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  workers: 4
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8501"          # Streamlit
+  jwt:
+    algorithm: "HS256"
+    expiry_minutes: 60
+    refresh_expiry_days: 7
+  rate_limit:
+    screening_per_minute: 10
+    report_per_minute: 5
+  max_upload_mb: 20
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Dashboard (Streamlit)
+# ───────────────────────────────────────────────────────────────────────────────
+dashboard:
+  host: "0.0.0.0"
+  port: 8501
+  api_base_url: "http://localhost:8000/api/v1"
+  session_timeout_minutes: 30
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Security & Encryption
+# ───────────────────────────────────────────────────────────────────────────────
+security:
+  encryption:
+    algorithm: "AES-256-GCM"
+    key_size_bytes: 32
+    nonce_size_bytes: 12
+    key_file: "secrets/data_encryption.key"  # chmod 600; never commit
+    encrypt_at_rest: true
+    encrypt_in_transit: true           # enforce TLS in production
+
+  pseudonymisation:
+    algorithm: "HMAC-SHA256"
+    salt_file: "secrets/pseudonym_salt.bin"
+    mapping_export_encrypted: true
+
+  password_hashing:
+    algorithm: "argon2id"
+    time_cost: 3
+    memory_cost_kb: 65536              # 64 MB
+    parallelism: 2
+    hash_length: 32
+
+  audit_log:
+    enabled: true
+    path: "logs/audit.log"
+    retention_days: 365
+    events:
+      - screening.submitted
+      - report.generated
+      - case.created
+      - case.archived
+      - auth.login
+      - auth.logout
+      - auth.failed
+      - referral.sent
+
+  tls:
+    enabled: false                     # set true in production
+    cert_file: "secrets/server.crt"
+    key_file: "secrets/server.key"
+    min_version: "TLSv1.2"
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Logging
+# ───────────────────────────────────────────────────────────────────────────────
+logging:
+  level: "INFO"                        # DEBUG | INFO | WARNING | ERROR | CRITICAL
+  dir: "logs"
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+  json_format: false                   # set true for log aggregators (ELK, Loki)
+  rotate:
+    max_bytes: 10485760                # 10 MB per file
+    backup_count: 5
+  modules:
+    api:            "INFO"
+    training:       "DEBUG"
+    evaluation:     "INFO"
+    data:           "INFO"
+    xai:            "INFO"
+    security:       "WARNING"

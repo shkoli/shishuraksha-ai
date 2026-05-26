@@ -1,0 +1,170 @@
+{
+  "case_id": "TEST-001",
+  "generated_at": "2026-05-26T03:02:28Z",
+  "screening_date": "2026-05-26",
+  "child_age": 12,
+  "child_gender": "F",
+  "risk_level": "HIGH",
+  "risk_level_bn": "উচ্চ ঝুঁকি",
+  "risk_score": 0.6176,
+  "confidence": 0.7327,
+  "referral_action": "routine_monitoring",
+  "referral_en": "DSS Hotline: 1098 (Within 24 hours)",
+  "referral_bn": "DSS হটলাইন: ১০৯৮ (২৪ ঘণ্টার মধ্যে)",
+  "urgency": "within_24h",
+  "recommended_actions": [
+    "urgent_psychiatric_referral",
+    "safety_planning",
+    "parent_consultation",
+    "dss_hotline_1098",
+    "1_week_followup"
+  ],
+  "top_risk_drivers": [
+    {
+      "rank": 1,
+      "feature": "cpss_total",
+      "importance": 0.7941,
+      "label_en": "CPSS PTSD Symptom Total",
+      "label_bn": "CPSS PTSD লক্ষণ মোট",
+      "feature_value": 0.8824
+    },
+    {
+      "rank": 2,
+      "feature": "risk_score",
+      "importance": 0.78,
+      "label_en": "Composite Risk Score",
+      "label_bn": "সমন্বিত ঝুঁকি স্কোর",
+      "feature_value": 0.78
+    },
+    {
+      "rank": 3,
+      "feature": "questionnaire",
+      "importance": 0.624,
+      "label_en": "Questionnaire modality",
+      "label_bn": "প্রশ্নমালা মডালিটি",
+      "feature_value": 0.78
+    },
+    {
+      "rank": 4,
+      "feature": "sdq_total",
+      "importance": 0.4125,
+      "label_en": "SDQ Total Difficulties",
+      "label_bn": "SDQ মোট সমস্যা স্কোর",
+      "feature_value": 0.55
+    },
+    {
+      "rank": 5,
+      "feature": "text",
+      "importance": 0.2972,
+      "label_en": "Bengali narrative text",
+      "label_bn": "বাংলা বিবরণ পাঠ",
+      "feature_value": 0.4954
+    }
+  ],
+  "waterfall_data": {
+    "base_score": 0.6476,
+    "final_score": 0.6176,
+    "steps": [
+      {
+        "feature": "cpss_total",
+        "label_en": "CPSS PTSD Symptom Total",
+        "label_bn": "CPSS PTSD লক্ষণ মোট",
+        "contribution": 0.7941,
+        "cumulative": 1.4417
+      },
+      {
+        "feature": "risk_score",
+        "label_en": "Composite Risk Score",
+        "label_bn": "সমন্বিত ঝুঁকি স্কোর",
+        "contribution": 0.78,
+        "cumulative": 2.2217
+      },
+      {
+        "feature": "questionnaire",
+        "label_en": "Questionnaire modality",
+        "label_bn": "প্রশ্নমালা মডালিটি",
+        "contribution": 0.624,
+        "cumulative": 2.8457
+      },
+      {
+        "feature": "sdq_total",
+        "label_en": "SDQ Total Difficulties",
+        "label_bn": "SDQ মোট সমস্যা স্কোর",
+        "contribution": 0.4125,
+        "cumulative": 3.2582
+      },
+      {
+        "feature": "text",
+        "label_en": "Bengali narrative text",
+        "label_bn": "বাংলা বিবরণ পাঠ",
+        "contribution": 0.2972,
+        "cumulative": 3.5554
+      },
+      {
+        "feature": "drawing",
+        "label_en": "HTP drawing analysis",
+        "label_bn": "HTP চিত্র বিশ্লেষণ",
+        "contribution": 0.2745,
+        "cumulative": 3.8299
+      },
+      {
+        "feature": "facial",
+        "label_en": "Facial expression analysis",
+        "label_bn": "মুখভঙ্গি বিশ্লেষণ",
+        "contribution": 0.273,
+        "cumulative": 4.1029
+      }
+    ]
+  },
+  "feature_importances": {
+    "sdq_total": 0.4125,
+    "cpss_total": 0.7941,
+    "risk_score": 0.78,
+    "questionnaire": 0.624,
+    "text": 0.2972,
+    "drawing": 0.2745,
+    "facial": 0.273
+  },
+  "per_modality_summary": [
+    {
+      "modality": "questionnaire",
+      "label_en": "Questionnaire (SDQ/CPSS/CSBI)",
+      "label_bn": "প্রশ্নমালা (SDQ/CPSS/CSBI)",
+      "risk_score": 0.78,
+      "weight": 0.6158,
+      "contribution": 0.4803
+    },
+    {
+      "modality": "facial",
+      "label_en": "Facial Expression Analysis",
+      "label_bn": "মুখভঙ্গি বিশ্লেষণ",
+      "risk_score": 0.546,
+      "weight": 0.2413,
+      "contribution": 0.1317
+    },
+    {
+      "modality": "text",
+      "label_en": "Bengali Narrative Text",
+      "label_bn": "বাংলা বিবরণ পাঠ",
+      "risk_score": 0.4954,
+      "weight": 0.0902,
+      "contribution": 0.0447
+    },
+    {
+      "modality": "drawing",
+      "label_en": "HTP Drawing Analysis",
+      "label_bn": "HTP চিত্র বিশ্লেষণ",
+      "risk_score": 0.4991,
+      "weight": 0.0526,
+      "contribution": 0.0263
+    }
+  ],
+  "override_notes": [],
+  "clinician_notes": "",
+  "disclaimer_bn": "এটি একটি স্ক্রিনিং টুল — রোগ নির্ণয় নয়। চূড়ান্ত সিদ্ধান্তের জন্য প্রশিক্ষিত ক্লিনিশিয়ানের পরামর্শ নিন।",
+  "disclaimer_en": "This is a screening tool — not a diagnosis. Consult a trained clinician for final clinical decisions.",
+  "questionnaire_detail": null,
+  "narrative_detail": null,
+  "drawing_detail": null,
+  "facial_detail": null
+}

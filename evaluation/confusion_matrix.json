@@ -1,0 +1,35 @@
+{
+  "labels": [
+    "LOW",
+    "MODERATE",
+    "HIGH",
+    "CRITICAL"
+  ],
+  "matrix": [
+    [
+      337,
+      20,
+      10,
+      17
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      34,
+      12,
+      17,
+      53
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "note": "rows=actual(LOW/HIGH only from binary GT), cols=predicted(4 classes)"
+}
