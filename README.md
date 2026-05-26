@@ -48,6 +48,131 @@
 
 ---
 
+## 🚀 Installation & Quick Start
+
+### Prerequisites
+- Python 3.10+
+- Node.js 18+
+- Git
+
+### Clone & Install
+```bash
+git clone https://github.com/shkoli/shishuraksha-ai
+cd shishuraksha-ai
+pip install -r requirements.txt
+```
+
+### Run the React Dashboard (Recommended)
+```bash
+cd dashboard-react
+npm install
+npm run dev
+# Open http://localhost:5173
+```
+
+### Run the Streamlit Dashboard
+```bash
+streamlit run dashboard/app.py
+# Open http://localhost:8501
+```
+
+### Run the API
+```bash
+uvicorn api.app:app --reload
+# Open http://localhost:8000/docs
+```
+
+### Generate Synthetic Data
+```bash
+python data/synthetic_data_generator.py
+```
+
+### Run Evaluation
+```bash
+python evaluation/metrics.py
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Bengali NLP | BanglaBERT (csebuetnlp/banglabert) | Trauma narrative analysis |
+| Drawing AI | EfficientNet-B0 + HTP markers | Child drawing analysis |
+| Face Analysis | MediaPipe Face Mesh | Expression detection |
+| Questionnaire | Gradient Boosting + Random Forest | SDQ/CPSS scoring |
+| Fusion | Cross-modal attention | Multi-modal combination |
+| XAI | SHAP + Grad-CAM + Attention maps | Explainability |
+| Backend | FastAPI + SQLite | REST API |
+| Dashboard | React 18 + Recharts + Tailwind | Clinical UI |
+| Alt Dashboard | Streamlit | Python-based UI |
+| Security | AES-256-GCM + HMAC-SHA256 | Data encryption |
+
+---
+
+## 🎬 Demo
+
+> Live demo not yet available. Run locally using the Quick Start guide above.
+
+**Demo video coming soon.**
+
+To try the system:
+1. Run `npm run dev` in `dashboard-react/`
+2. Open http://localhost:5173
+3. Click "New Screening"
+4. Follow the 5-step wizard
+5. View risk result + XAI explanation
+
+---
+
+## ⚠️ Limitations
+
+| Limitation | Details |
+|------------|---------|
+| Synthetic data only | No real children were involved — real-world validation needed before deployment |
+| Bengali dialect coverage | Trained on standard Bengali — Sylheti and Chittagonian dialects not covered |
+| Urban/rural gap | Model shows 0.780 AUC urban vs 0.902 rural — urban recalibration needed |
+| No IRB approval yet | Real deployment requires institutional ethics approval |
+| Facial modality reliability | MediaPipe performance degrades on low-quality webcam footage |
+| Not a diagnosis | This tool screens only — a licensed clinician must confirm all results |
+
+---
+
+## 🤖 Model Weights & Data
+
+| Asset | Availability |
+|-------|-------------|
+| Source code | Open source (MIT) |
+| Synthetic dataset | Included in repo (`data/synthetic/`) |
+| Trained model weights | Not included (train locally) |
+| Real clinical data | Not available (privacy) |
+
+To train models locally:
+```bash
+python training/train_questionnaire.py
+python training/train_fusion.py
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome, especially:
+- Bengali dialect support (Sylheti, Chittagonian)
+- Real clinical data partnerships
+- Mobile app version
+- Additional XAI methods
+
+Steps:
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Commit changes: `git commit -m "feat: your feature"`
+4. Push: `git push origin feature/your-feature`
+5. Open a Pull Request
+
+---
+
 > 🇧🇩 Bangladesh has approximately **1 child psychologist per 500,000 people**.
 > Most child abuse goes undetected in rural areas no trained screener, no Bengali tool, no offline solution.
 > **ShishuRaksha AI bridges this gap.**
@@ -182,7 +307,7 @@ Score:  0.00 ─────── 0.25 ─────── 0.50 ────�
 ## 📁 Project Structure
 
 ```
-xai-mpscap-bd/
+shishuraksha-ai/
 │
 ├── 📂 modules/                    # Core analysis modules
 │   ├── questionnaire/             # SDQ + CPSS scoring engine
@@ -350,6 +475,10 @@ npm run dev
 | **Mandatory reporting** | CRITICAL tier auto-links Children Act 2013 + OCC 16767 |
 | **Bias audit** | Age · gender · division · SES subgroup analysis |
 | **Decision-support only** | Final clinical judgment rests with a qualified professional |
+| **Local-only processing** | Data never leaves the local device — no cloud storage of child data |
+| **Auto-deletion** | Audio and video are deleted after feature extraction |
+| **Children Act 2013** | Compliant with Bangladesh Children Act 2013 mandatory reporting obligations |
+| **GDPR-aligned** | Data handling follows GDPR-aligned principles (data minimisation, purpose limitation, right to erasure) |
 
 </div>
 
@@ -448,6 +577,10 @@ If you use this work, please cite:
 
 This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
+You are free to use, modify, and distribute this software for research and educational purposes.
+
+**Important:** This software must not be used as a standalone clinical diagnostic tool without proper validation, IRB approval, and oversight by licensed clinical professionals.
+
 > Clinical deployment requires institutional ethics approval and regulatory clearance under Bangladesh DGDA guidelines. This software is provided **for research purposes only**.
 
 ---
@@ -455,6 +588,8 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
 <div align="center">
 
 Made with ❤️ for the children of Bangladesh
+
+⚠️ Not for clinical use without proper validation
 
 **[⬆ Back to top](#️-shishuraksha-ai)**
 
