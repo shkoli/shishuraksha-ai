@@ -49,7 +49,7 @@
 ---
 
 > 🇧🇩 Bangladesh has approximately **1 child psychologist per 500,000 people**.
-> Most child abuse goes undetected in rural areas — no trained screener, no Bengali tool, no offline solution.
+> Most child abuse goes undetected in rural areas no trained screener, no Bengali tool, no offline solution.
 > **ShishuRaksha AI bridges this gap.**
 
 ---
@@ -413,7 +413,13 @@ npm run dev
 
 **Developer:** Salma Hoque Talukdar Koli
 
-**Ethics Reference:** BSMMU-ERC-2024-XXX *(pre-deployment IRB approval required)*
+## 🛡️ Ethics & Responsible AI
+
+**Ethics Status:** Research prototype phase only.
+
+We will seek formal ethics approval from **BSMMU-ERC** before any human subject testing, data collection, or clinical deployment. 
+
+Application to BSMMU Institutional Review Board (IRB) will be submitted when moving beyond prototype stage.
 
 **Version:** 0.2.0 · Research prototype
 
